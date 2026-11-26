@@ -3,176 +3,191 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>住宿比價 · 含稅總價</title>
+<title>住宿比價・Google Hotels 即時報價</title>
 <style>
 :root{--bg:#f3f5f2;--card:#fff;--ink:#1c2b2a;--mute:#66736f;--line:#dbe2de;--pine:#0f5c4d;--best:#c2410c;--bestbg:#fff1e6}
 @media (prefers-color-scheme:dark){:root{--bg:#121a19;--card:#1a2523;--ink:#e8efec;--mute:#93a39e;--line:#2c3a37;--pine:#4fc3a9;--best:#ffa56b;--bestbg:#33241a}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
-main{max-width:920px;margin:0 auto;padding:24px 16px 60px}
-h1{font-size:26px;margin:0 0 4px;letter-spacing:.02em}
-.sub{color:var(--mute);margin:0 0 20px}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
-.row{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+main{max-width:960px;margin:0 auto;padding:24px 16px 70px}
+h1{font-size:26px;margin:0 0 4px}
+.sub{color:var(--mute);margin:0 0 16px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-top:12px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-top:10px}.row:first-child{margin-top:0}
 label{display:flex;flex-direction:column;font-size:13px;color:var(--mute);gap:3px}
 input,select,button{font:inherit;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+button{cursor:pointer}
 #q{min-width:260px;flex:1}
-button.go{background:var(--pine);color:var(--bg);border-color:var(--pine);cursor:pointer;font-weight:600}
+.go{background:var(--pine);color:var(--bg);border-color:var(--pine);font-weight:600}
+.go:disabled{opacity:.5;cursor:wait}
 :focus-visible{outline:2px solid var(--pine);outline-offset:2px}
-.chk{flex-direction:row;align-items:center;gap:6px}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}.seg button{border:0;border-radius:0}.seg button[aria-pressed=true]{background:var(--pine);color:var(--bg);font-weight:600}
 .note{font-size:13px;color:var(--mute);margin:12px 0}
-.hotel{display:grid;grid-template-columns:1fr auto;gap:8px 16px;margin-top:12px;cursor:pointer;text-align:left;width:100%;color:inherit}
+.warn{border-left:4px solid var(--best);padding:8px 12px;background:var(--bestbg);font-size:13px;border-radius:0 8px 8px 0;margin:12px 0}
+.hotel{display:grid;grid-template-columns:1fr auto;gap:8px 16px;cursor:pointer;width:100%}
 .hotel:hover{border-color:var(--pine)}
-.hname{font-weight:700;font-size:17px}
-.meta{color:var(--mute);font-size:13px}
-.best{text-align:right}
-.best b{font-size:22px;color:var(--best)}
+.hname{font-weight:700;font-size:17px}.meta{color:var(--mute);font-size:13px}
+.best{text-align:right}.best b{font-size:22px;color:var(--best)}
 .plat{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 14px;border-top:1px solid var(--line);padding-top:8px;font-size:13px}
-.plat span.lo{color:var(--best);font-weight:700}
+.plat .lo{color:var(--best);font-weight:700}.plat a{color:inherit}
+.cta{display:inline-block;margin-top:6px;background:var(--pine);color:var(--bg);padding:6px 12px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px}
+.tag{font-size:12px;background:var(--bestbg);color:var(--best);padding:1px 7px;border-radius:99px;margin-left:6px;white-space:nowrap}
 table{width:100%;border-collapse:collapse;font-size:14px}
-th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
-th:first-child,td:first-child{text-align:left;white-space:normal}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right}
+th:first-child,td:first-child,td.l,th.l{text-align:left}
 td.min{background:var(--bestbg);color:var(--best);font-weight:700}
 .scroll{overflow-x:auto}
-.back{cursor:pointer;margin-bottom:10px}
-.tag{font-size:12px;background:var(--bestbg);color:var(--best);padding:1px 7px;border-radius:99px;margin-left:6px}
-.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}.seg button{border:0;border-radius:0;cursor:pointer}.seg button[aria-pressed=true]{background:var(--pine);color:var(--bg);font-weight:600}
-.cta{display:inline-block;margin-top:6px;background:var(--pine);color:var(--bg);padding:6px 12px;border-radius:8px;font-weight:600;text-decoration:none;font-size:14px}
-.plat a{color:inherit}.plat a:hover{text-decoration:underline}th a{color:inherit}
+h3{margin:18px 0 6px;font-size:16px}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--pine);color:var(--bg);padding:10px 16px;border-radius:8px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}#toast.on{opacity:1}
-.fine{font-size:12px;color:var(--mute);margin-top:6px}
-.warn{border-left:4px solid var(--best);padding:8px 12px;background:var(--bestbg);font-size:13px;border-radius:0 8px 8px 0;margin-bottom:14px}
+.fine{font-size:12px;color:var(--mute);margin-top:8px}
 </style>
 </head>
 <body>
 <main>
-<h1>住宿比價・含稅總價</h1>
-<p class="sub">輸入車站或地標，列出最近 10 間住宿，並比較各訂房網的最終總價。</p>
-<div class="warn">目前為示範版：價格為內建範例資料（非即時報價）。要顯示真實價格，需串接訂房平台的 API 或比價資料服務（見頁尾說明）。</div>
+<h1>住宿比價・Google Hotels 即時報價</h1>
+<p class="sub">輸入地點，列出最近的住宿與各訂房網報價；選好之後再前往平台確認實際價格。</p>
 
 <div class="panel">
   <div class="row">
-    <label style="flex:1">地點／車站<input id="q" placeholder="輸入地點或車站，例如：箱根湯本車站" autocomplete="off"></label>
+    <label style="flex:1">地點／車站<input id="q" placeholder="輸入地點或車站，例如：Hakone-Yumoto Station" autocomplete="off"></label>
     <label>入住<input type="date" id="ci"></label>
     <label>退房<input type="date" id="co"></label>
     <label>人數<select id="ppl"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></label>
     <button class="go" id="go">搜尋</button>
   </div>
-  <div class="row" style="margin-top:10px">
-    <label class="chk"><input type="checkbox" id="ns" checked> 僅禁菸房</label>
-    <label class="chk"><input type="checkbox" id="fc"> 僅顯示免費取消</label>
-  </div>
-  <div class="row" style="margin-top:10px">
+  <div class="row">
+    <label>範圍<select id="km"><option value="1">1 公里內</option><option value="2" selected>2 公里內</option><option value="5">5 公里內</option></select></label>
+    <label>幣別<select id="cur"><option value="TWD|TW">TWD（台灣）</option><option value="JPY|JP">JPY（日本）</option><option value="KRW|KR">KRW（韓國）</option><option value="USD|US">USD（美國）</option></select></label>
+    <label>原文名稱<select id="lang"><option value="">不顯示</option><option value="ja">日文</option><option value="ko">韓文</option><option value="zh-TW">繁體中文</option><option value="th">泰文</option></select></label>
     <label>複製的名稱<select id="cn"><option value="en">英文名稱</option><option value="l">原文名稱</option></select></label>
-    <label>排序方式<div class="seg" id="sortseg"><button data-m="dist" aria-pressed="true">依距離</button><button data-m="rate" aria-pressed="false">依評分</button></div></label>
-    <label>評分來源<select id="rsrc"><option value="avg">綜合平均（三個來源）</option><option value="g">Google 地圖</option><option value="b">Booking.com</option><option value="a">Agoda</option></select></label>
   </div>
+  <div class="row">
+    <label>排序方式<div class="seg" id="sortseg"><button data-m="rec" aria-pressed="true">推薦排序</button><button data-m="dist" aria-pressed="false">依距離</button><button data-m="rate" aria-pressed="false">依評分</button><button data-m="price" aria-pressed="false">依價格</button></div></label>
+    <label>推薦權重<select id="wt"><option value="0.7">評分優先</option><option value="0.5" selected>評分與距離平衡</option><option value="0.3">距離優先</option></select></label>
+    <label>評分來源<select id="rsrc"><option value="avg">綜合平均</option><option value="g">Google 地圖</option><option value="b">Booking.com</option><option value="a">Agoda</option></select></label>
+  </div>
+  <div class="row">
+    <label style="flex-direction:row;align-items:center;gap:6px;color:var(--ink)"><input type="checkbox" id="lazy" checked> 省錢模式：列表只查最低價，點進住宿才查各平台與房型報價</label>
+  </div>
+  <div class="row">
+    <label style="flex:1">Apify API Token（只存在你的瀏覽器）<input id="tok" type="password" placeholder="apify_api_..." autocomplete="off"></label>
+  </div>
+  <p class="fine">報價由 Apify 上的 Google Hotels 工具取得。Apify 免費方案每月有 US$5 額度、不用信用卡，用完會暫停而不會扣款。省錢模式下，一次搜尋 10 間約 US$0.03，點進單一住宿查明細約 US$0.008；關閉省錢模式一次約 US$0.08。Token 到 console.apify.com 的 Settings → API &amp; Integrations 取得。</p>
 </div>
+<div class="warn">報價來自 Google Hotels，可能與訂房網結帳頁有差異（會員價、時間、地區）。請點「前往訂房」到平台確認最終價格。Google Hotels 資料沒有可靠的禁菸／吸菸欄位，房型名稱若有標示會顯示標籤。</div>
 
-<div id="out"></div>
-<p class="fine">點連結時會同時複製飯店名稱。連結會帶入日期與人數前往各平台的搜尋頁，實際房價請以平台頁面為準。價格計算：標示「未含稅」的平台加計消費稅 10%、服務費；各平台另加入湯稅（箱根每人每晚約 NT$30，依實際匯率而定）。實際結帳金額以訂房網站為準。</p>
+<div id="out"><p class="note">請輸入地點後按「搜尋」。</p></div>
 </main>
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script>
-const PLAT=[
- {id:"trip",name:"Trip.com",f:0.87,taxInc:true,svc:0},
- {id:"booking",name:"Booking.com",f:1.15,taxInc:false,svc:0},
- {id:"agoda",name:"Agoda",f:1.04,taxInc:false,svc:0},
- {id:"ikyu",name:"Ikyu.com",f:1.00,taxInc:true,svc:0},
- {id:"official",name:"官方網站",f:0.90,taxInc:true,svc:0}
-];
-const ROOMS=[
- {n:"標準雙人房（禁菸）",m:1,smoke:false,fc:true},
- {n:"和洋室（禁菸）",m:1.28,smoke:false,fc:true},
- {n:"附私人露天風呂客房（禁菸）",m:1.95,smoke:false,fc:false},
- {n:"含早晚餐方案雙人房（禁菸）",m:1.75,smoke:false,fc:false},
- {n:"標準雙人房（可吸菸）",m:0.95,smoke:true,fc:true}
-];
-// 示範資料：base = 每晚雙人標準房 NT$（未含稅基準），dist = 距車站公尺（示範值）
-const HOTELS=[
- {n:"Hotel Kajikaso",l:"ホテル河鹿荘",d:350,b:4700,star:4.2},
- {n:"Yumoto Fujiya Hotel",l:"湯本富士屋ホテル",d:480,b:6900,star:4.3},
- {n:"Yaeikan",l:"箱根湯本温泉 弥栄館",d:520,b:5200,star:4.0},
- {n:"Hotel Okada",l:"ホテルおかだ",d:640,b:8800,star:4.1},
- {n:"Fukuzumirou",l:"福住楼",d:700,b:9400,star:4.5},
- {n:"Hakone Ichinoyu Honkan",l:"箱根湯本温泉 一の湯 本館",d:760,b:5600,star:4.0},
- {n:"Ryokan Sakura",l:"旅館さくら",d:830,b:4300,star:3.9},
- {n:"Tenseien",l:"箱根湯本 天成園",d:910,b:6200,star:4.2},
- {n:"Ryokan Hanabishi",l:"旅館花菱",d:1100,b:7600,star:4.3},
- {n:"Guest House Tsuta",l:"ゲストハウス蔦",d:1250,b:3200,star:3.8}
-];
-// 示範評分：g=Google 地圖(滿分5)、b=Booking.com(滿分10)、a=Agoda(滿分10)
-const RT=[{g:4.2,b:8.6,a:8.7,gn:1840},{g:4.3,b:8.8,a:8.9,gn:2960},{g:4.0,b:8.3,a:8.4,gn:1210},{g:4.1,b:8.5,a:8.4,gn:980},{g:4.5,b:9.1,a:9.2,gn:1530},{g:4.0,b:8.2,a:8.3,gn:870},{g:3.9,b:8.0,a:8.1,gn:640},{g:4.2,b:8.7,a:8.6,gn:2210},{g:4.3,b:8.9,a:8.8,gn:760},{g:3.8,b:7.9,a:8.2,gn:430}];
-const SRC={avg:"綜合平均",g:"Google 地圖",b:"Booking.com",a:"Agoda"};
-let sortMode="dist";
-const rate=(i,s)=>{const r=RT[i];return s==="g"?r.g:s==="b"?r.b/2:s==="a"?r.a/2:(r.g+r.b/2+r.a/2)/3};
-function link(p,h){const n=encodeURIComponent(h.n),ci=$("#ci").value,co=$("#co").value,g=$("#ppl").value,nn=nights(),G="https://www.google.com/search?q=";
- return {trip:`https://www.trip.com/hotels/list?keyword=${n}&checkin=${ci}&checkout=${co}&adult=${g}`,
- booking:`https://www.booking.com/searchresults.html?ss=${n}&checkin=${ci}&checkout=${co}&group_adults=${g}&no_rooms=1`,
- agoda:`https://www.agoda.com/search?textToSearch=${n}&checkIn=${ci}&los=${nn}&rooms=1&adults=${g}`,
- ikyu:G+n+"+ikyu.com",official:G+n+"+官方網站"}[p.id]}
-function copyText(t){
- const done=()=>toast("已複製：「"+t+"」，到訂房網貼上即可搜尋");
- const fb=()=>{const a=document.createElement("textarea");a.value=t;a.style.position="fixed";a.style.opacity="0";document.body.appendChild(a);a.select();try{document.execCommand("copy");done()}catch(e){toast("複製失敗，請手動複製："+t)}a.remove()};
- if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,fb)}else fb()}
-let tt;function toast(m){const e=document.getElementById("toast");e.textContent=m;e.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>e.classList.remove("on"),3500)}
-document.addEventListener("click",e=>{const a=e.target.closest("a[data-copy]");if(a){const h=HOTELS[+a.dataset.copy];copyText($("#cn").value==="en"?h.n:h.l)}});
 const $=s=>document.querySelector(s),out=$("#out");
-const fmt=n=>"NT$"+Math.round(n).toLocaleString();
+let DATA=[],sortMode="rec",CUR="TWD",NIGHTS=1;
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=n=>n==null?"—":new Intl.NumberFormat("zh-TW",{style:"currency",currency:CUR,maximumFractionDigits:0}).format(n);
 const iso=d=>d.toISOString().slice(0,10);
-const t=new Date();t.setDate(t.getDate()+4);$("#ci").value=iso(t);t.setDate(t.getDate()+1);$("#co").value=iso(t);
+const d0=new Date();d0.setDate(d0.getDate()+14);$("#ci").value=iso(d0);d0.setDate(d0.getDate()+1);$("#co").value=iso(d0);
+try{$("#tok").value=localStorage.getItem("apifyTok")||""}catch(e){}
 
-function nights(){const n=(new Date($("#co").value)-new Date($("#ci").value))/864e5;return n>0?n:1}
-function total(base,p,hi,ri){
-  const v=1+((hi*7+ri*3+p.id.length)%5-2)*0.012; // 示範用的小幅價差
-  let x=base*p.f*v*nights();
-  const bathTax=30*$("#ppl").value*nights();
-  if(!p.taxInc) x=x*1.10;
-  return {sub:x,all:x+bathTax,bathTax};
+let tt;function toast(m){const e=$("#toast");e.textContent=m;e.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>e.classList.remove("on"),3500)}
+function copyText(t){const ok=()=>toast("已複製：「"+t+"」，到訂房網貼上即可搜尋");
+ const fb=()=>{const a=document.createElement("textarea");a.value=t;a.style.cssText="position:fixed;opacity:0";document.body.appendChild(a);a.select();try{document.execCommand("copy");ok()}catch(e){toast("請手動複製："+t)}a.remove()};
+ navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t).then(ok,fb):fb()}
+document.addEventListener("click",e=>{const a=e.target.closest("a[data-copy]");if(a){const h=DATA[+a.dataset.copy];copyText($("#cn").value==="l"&&h.localName?h.localName:h.name)}});
+
+async function run(input,token){
+ const r=await fetch("https://api.apify.com/v2/acts/surefeed~google-hotels-scraper/run-sync-get-dataset-items?maxTotalChargeUsd=0.5&token="+encodeURIComponent(token),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(input)});
+ if(!r.ok){let m="";try{m=(await r.json()).error?.message||""}catch(e){}throw new Error("HTTP "+r.status+" "+m)}
+ return r.json();
 }
-function search(){
-  const q=$("#q").value.trim();
-  if(!q){out.innerHTML='<p class="note">請在上方輸入地點或車站，再按「搜尋」。</p>';return}
-  if(!/箱根|湯本|hakone|yumoto/i.test(q)){
-    out.innerHTML='<p class="note">示範版目前只有「箱根湯本車站」的資料，請輸入箱根湯本車站。</p>';return}
-  const ns=$("#ns").checked;
-  const list=HOTELS.slice().sort((a,b)=>a.d-b.d).slice(0,10).map(h=>{
-    const hi=HOTELS.indexOf(h);
-    const rooms=ROOMS.filter(r=>!(ns&&r.smoke)&&!($("#fc").checked&&!r.fc));
-    const r0=rooms[0]||ROOMS[0];
-    const per=PLAT.map(p=>({p,...total(h.b*r0.m,p,hi,0)}));
-    const min=per.reduce((a,b)=>a.all<b.all?a:b);
-    return {h,hi,per,min,room:r0,rt:rate(hi,$('#rsrc').value)};
-  });
-  if(sortMode==='rate') list.sort((a,b)=>b.rt-a.rt||a.h.d-b.h.d);
-  out.innerHTML=`<p class="note">${q} 附近 ${list.length} 間住宿（${sortMode==='rate'?'依評分高到低，評分來源：'+SRC[$('#rsrc').value]:'依距離由近到遠'}）・${$("#ppl").value} 位・${nights()} 晚・${ns?"禁菸房":"不限吸菸"}。顯示標準雙人房含稅總價，點選查看所有房型。</p>`
-   +list.map((x,i)=>`<div class="panel hotel" role="button" tabindex="0" data-i="${x.hi}">
-     <div><div class="hname">${x.h.n}</div><div class="meta">${x.h.l}</div><div class="meta">距車站約 ${x.h.d}m ・ ★ ${x.rt.toFixed(1)}／5（${SRC[$('#rsrc').value]}）・ ${x.room.n}</div></div>
-     <div class="best"><div class="meta">最低含稅總價</div><b>${fmt(x.min.all)}</b><div class="meta">${x.min.p.name}</div><a class="cta" data-copy="${x.hi}" target="_blank" rel="noopener noreferrer" href="${link(x.min.p,x.h)}">前往 ${x.min.p.name} 訂房</a></div>
-     <div class="plat">${x.per.map(y=>`<span class="${y===x.min?'lo':''}"><a data-copy="${x.hi}" target="_blank" rel="noopener noreferrer" href="${link(y.p,x.h)}">${y.p.name} ${fmt(y.all)}</a></span>`).join("")}</div>
-   </div>`).join("");
-  out.querySelectorAll(".hotel").forEach(b=>{const go=e=>{if(e.target.closest("a"))return;detail(+b.dataset.i)};b.onclick=go;b.onkeydown=e=>e.key==="Enter"&&go(e)});
+const key=h=>(h.googleHotelsUrl||"").split("?")[0]||(Math.round(h.latitude*1e4)+","+Math.round(h.longitude*1e4));
+
+async function search(){
+ const q=$("#q").value.trim(),token=$("#tok").value.trim();
+ if(!q){out.innerHTML='<p class="note">請先輸入地點或車站。</p>';return}
+ if(!token){out.innerHTML='<p class="note">請先填入 Apify API Token。</p>';return}
+ try{localStorage.setItem("apifyTok",token)}catch(e){}
+ const [cur,country]=$("#cur").value.split("|");CUR=cur;
+ NIGHTS=Math.max(1,Math.round((new Date($("#co").value)-new Date($("#ci").value))/864e5));
+ const base={near:q,maxDistanceKm:+$("#km").value,checkIn:$("#ci").value,checkOut:$("#co").value,adults:+$("#ppl").value,currency:cur,country,onlyAvailable:true,maxResultsPerQuery:10,expandResults:false};
+ $("#go").disabled=true;out.innerHTML='<p class="note">正在向 Google Hotels 取得報價，約需 30–120 秒…</p>';
+ try{
+  const lang=$("#lang").value;
+  const [main,loc]=await Promise.all([run({...base,language:"en",includeDetails:!$("#lazy").checked},token),lang?run({...base,language:lang,includeDetails:false},token).catch(()=>[]):Promise.resolve([])]);
+  const lm=new Map(loc.map(h=>[key(h),h.name]));
+  DATA=main.filter(h=>h&&h.name).map(h=>({...h,localName:lm.get(key(h))||""}));
+  if(!DATA.length){out.innerHTML='<p class="note">找不到有空房的住宿。可放寬範圍、換日期，或改用英文地名。</p>';$("#go").disabled=false;return}
+  render();
+ }catch(e){out.innerHTML=`<div class="warn">取得報價失敗：${esc(e.message)}<br>請確認 Token 正確、帳戶有餘額，或改用其他幣別再試。</div>`}
+ $("#go").disabled=false;
 }
-function detail(hi){
-  const h=HOTELS[hi],ns=$("#ns").checked;
-  const rooms=ROOMS.filter(r=>!(ns&&r.smoke));
-  const rows=rooms.map((r,ri)=>{
-    const c=PLAT.map(p=>({p,...total(h.b*r.m,p,hi,ri)}));
-    const m=Math.min(...c.map(x=>x.all));
-    return `<tr><td>${r.n}${r.fc?'<span class="tag">可免費取消</span>':''}</td>${c.map(x=>`<td class="${x.all===m?'min':''}" title="稅前 ${fmt(x.sub)}＋入湯稅 ${fmt(x.bathTax)}">${fmt(x.all)}</td>`).join("")}</tr>`}).join("");
-  out.innerHTML=`<p class="back"><button id="bk">← 返回列表</button></p>
-   <div class="panel"><div class="hname">${h.n}</div><div class="meta">${h.l}</div>
-   <div class="meta">評分：Google 地圖 ${RT[hi].g}／5（${RT[hi].gn.toLocaleString()} 則）・ Booking.com ${RT[hi].b}／10 ・ Agoda ${RT[hi].a}／10</div>
-   <div class="meta">距箱根湯本車站約 ${h.d}m ・ ${$("#ci").value} ～ ${$("#co").value}（${nights()} 晚）・ ${$("#ppl").value} 位</div>
-   <div class="scroll" style="margin-top:12px"><table><thead><tr><th>房型</th>${PLAT.map(p=>`<th><a data-copy="${hi}" target="_blank" rel="noopener noreferrer" href="${link(p,h)}">${p.name}</a><div class="meta">${p.taxInc?'含稅':'稅外加'}</div></th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>
-   <p class="fine">橘色為該房型含稅最低價。點平台名稱可前往該平台搜尋此飯店；滑過價格可看稅前金額與入湯稅。</p></div>`;
-  $("#bk").onclick=search;
+const offers=h=>((h.details&&h.details.offers)||[]).filter(o=>o.totalPrice!=null);
+function cheapest(h){const o=offers(h).slice().sort((a,b)=>a.totalPrice-b.totalPrice)[0];
+ return o?{p:o.provider,t:o.totalPrice,u:o.bookingUrl||h.googleHotelsUrl}:{p:"Google Hotels",t:h.totalPrice,u:h.googleHotelsUrl}}
+function rateOf(h,s){const g=h.rating;const os=(h.details&&h.details.otherSiteRatings)||[];
+ const f=re=>{const x=os.find(o=>re.test(o.site));return x?x.rating/x.scale*5:null};
+ const b=f(/booking/i),a=f(/agoda/i);
+ if(s==="g")return g??0;if(s==="b")return b??g??0;if(s==="a")return a??g??0;
+ const v=[g,b,a].filter(x=>x!=null);return v.length?v.reduce((x,y)=>x+y)/v.length:0}
+function score(h,r){const w=+$("#wt").value,km=+$("#km").value;
+ const rn=Math.max(0,Math.min(1,(r-3)/2)),dn=1-Math.min(1,(h.distanceKm??km)/km);return(w*rn+(1-w)*dn)*100}
+const SRC={avg:"綜合平均",g:"Google 地圖",b:"Booking.com",a:"Agoda"};
+const nameBlock=h=>`<div class="hname">${esc(h.name)}</div>${h.localName&&h.localName!==h.name?`<div class="meta">${esc(h.localName)}</div>`:""}`;
+
+function render(){
+ const s=$("#rsrc").value;
+ const L=DATA.map((h,i)=>({h,i,c:cheapest(h),r:rateOf(h,s)})).map(x=>({...x,sc:score(x.h,x.r)}));
+ if(sortMode==="rec")L.sort((a,b)=>b.sc-a.sc);
+ if(sortMode==="rate")L.sort((a,b)=>b.r-a.r);
+ if(sortMode==="price")L.sort((a,b)=>(a.c.t??1e12)-(b.c.t??1e12));
+ if(sortMode==="dist")L.sort((a,b)=>(a.h.distanceKm??99)-(b.h.distanceKm??99));
+ const how={rec:"依推薦指數排序（評分＋距離，評分來源："+SRC[s]+"）",dist:"依距離由近到遠",rate:"依評分高到低（"+SRC[s]+"）",price:"依最低總價由低到高"}[sortMode];
+ out.innerHTML=`<p class="note">${esc($("#q").value)} 附近 ${L.length} 間住宿・${$("#ppl").value} 位・${NIGHTS} 晚・${how}。點選住宿，再查看各平台報價與房型。</p>`+
+ L.map((x,k)=>{const h=x.h,o=offers(h),min=x.c;
+  const inc=h.pricesIncludeTaxes===true?"含稅":"稅制未確認";
+  return `<div class="panel hotel" role="button" tabindex="0" data-i="${x.i}">
+   <div>${nameBlock(h)}<div class="meta">${sortMode==="rec"?`<b>推薦 #${k+1}</b>（指數 ${Math.round(x.sc)}）・ `:""}${h.distanceKm!=null?"距離約 "+Math.round(h.distanceKm*1000)+"m ・ ":""}★ ${x.r?x.r.toFixed(1):"—"}／5（${SRC[s]}）${h.stars?" ・ "+h.stars+" 星":""}</div></div>
+   <div class="best"><div class="meta">${NIGHTS} 晚最低總價（${inc}）</div><b>${fmt(min.t)}</b><div class="meta">${esc(min.p)}</div>${min.u?`<a class="cta" data-copy="${x.i}" target="_blank" rel="noopener noreferrer" href="${esc(min.u)}">前往 ${esc(min.p)} 訂房</a>`:""}</div>
+   <div class="plat">${o.length?o.map(p=>`<span class="${p.provider===min.p&&p.totalPrice===min.t?'lo':''}"><a data-copy="${x.i}" target="_blank" rel="noopener noreferrer" href="${esc(p.bookingUrl||h.googleHotelsUrl)}">${esc(p.provider)} ${fmt(p.totalPrice)}</a></span>`).join(""):'<span class="meta">點進去查詢各平台報價</span>'}</div>
+  </div>`}).join("");
+ out.querySelectorAll(".hotel").forEach(b=>{const go=e=>{if(e.target.closest("a"))return;detail(+b.dataset.i)};b.onclick=go;b.onkeydown=e=>e.key==="Enter"&&go(e)});
 }
-document.querySelectorAll("#sortseg button").forEach(b=>b.onclick=()=>{sortMode=b.dataset.m;document.querySelectorAll("#sortseg button").forEach(x=>x.setAttribute("aria-pressed",x===b));search()});
+function detail(i){
+ const h=DATA[i],o=offers(h).slice().sort((a,b)=>a.totalPrice-b.totalPrice),d=h.details||{};
+ const url=p=>{const x=o.find(z=>z.provider===p);return x&&x.bookingUrl||h.googleHotelsUrl};
+ const rr=(d.roomRates||[]).filter(r=>r.totalPrice!=null);
+ const minBy={};rr.forEach(r=>{if(!(r.room in minBy)||r.totalPrice<minBy[r.room])minBy[r.room]=r.totalPrice});
+ rr.sort((a,b)=>a.room.localeCompare(b.room)||a.totalPrice-b.totalPrice);
+ const os=(d.otherSiteRatings||[]).map(x=>`${esc(x.site)} ${x.rating}／${x.scale}`).join(" ・ ");
+ const link=(p,t)=>`<a class="cta" data-copy="${i}" target="_blank" rel="noopener noreferrer" href="${esc(url(p))}">${t||"前往訂房"}</a>`;
+ out.innerHTML=`<p><button id="bk">← 返回列表</button></p>
+ <div class="panel">${nameBlock(h)}
+  <div class="meta">${esc(d.address||"")} ・ Google 評分 ${h.rating??"—"}／5（${h.reviewCount??"—"} 則）${os?" ・ "+os:""}</div>
+  <div class="meta">${esc($("#ci").value)} ～ ${esc($("#co").value)}（${NIGHTS} 晚）・ ${$("#ppl").value} 位 ・ ${h.pricesIncludeTaxes===true?"價格含稅":"稅制未確認，請到平台確認"}</div>
+  ${(!o.length&&!rr.length)?'<p><button class="go" id="fd">查詢各平台報價與房型（約 US$0.008）</button></p><div id="fdm" class="note"></div>':''}
+  <h3>各平台報價</h3>
+  <div class="scroll"><table><thead><tr><th>平台</th><th>每晚</th><th>未稅每晚</th><th>${NIGHTS} 晚總價</th><th></th></tr></thead><tbody>
+  ${o.map((p,k)=>`<tr><td class="l">${esc(p.provider)}${p.freeCancellation?'<span class="tag">免費取消</span>':""}</td><td>${fmt(p.pricePerNight)}</td><td>${fmt(p.pricePerNightBeforeTaxes)}</td><td class="${k?'':'min'}">${fmt(p.totalPrice)}</td><td>${p.bookingUrl?link(p.provider):""}</td></tr>`).join("")||'<tr><td class="l" colspan="5">沒有各平台明細</td></tr>'}
+  </tbody></table></div>
+  <h3>各房型報價</h3>
+  <div class="scroll"><table><thead><tr><th>房型</th><th class="l">平台</th><th class="l">條件</th><th>${NIGHTS} 晚總價</th><th></th></tr></thead><tbody>
+  ${rr.map(r=>{const ns=/non[- ]?smoking|禁煙|禁菸/i.test(r.room+" "+(r.conditions||""));const sm=!ns&&/\bsmoking|喫煙|吸菸/i.test(r.room+" "+(r.conditions||""));
+   return `<tr><td class="l">${esc(r.room)}${ns?'<span class="tag">禁菸</span>':""}${sm?'<span class="tag">可吸菸</span>':""}</td><td class="l">${esc(r.provider)}</td><td class="l">${esc(r.conditions||"")}${r.breakfastIncluded?'<span class="tag">含早餐</span>':""}${r.freeCancellation?'<span class="tag">免費取消</span>':""}</td><td class="${r.totalPrice===minBy[r.room]?'min':''}">${fmt(r.totalPrice)}</td><td>${link(r.provider)}</td></tr>`}).join("")||'<tr><td class="l" colspan="5">Google 沒有提供這間的房型明細</td></tr>'}
+  </tbody></table></div>
+  <p class="fine">橘色為同房型最低價。連結會同時複製飯店名稱，到平台貼上搜尋即可。${d.website?` 官方網站：<a href="${esc(d.website)}" target="_blank" rel="noopener noreferrer">${esc(d.website)}</a>`:""}</p></div>`;
+ $("#bk").onclick=render;window.scrollTo(0,0);
+ const fd=$("#fd");if(fd)fd.onclick=async()=>{fd.disabled=true;$("#fdm").textContent="查詢中，約 20–60 秒…";
+  try{const [cur,country]=$("#cur").value.split("|");
+   const r=await run({queries:[h.name+", "+$("#q").value.trim()],checkIn:$("#ci").value,checkOut:$("#co").value,adults:+$("#ppl").value,currency:cur,country,language:"en",maxResultsPerQuery:1,includeDetails:true,expandResults:false},$("#tok").value.trim());
+   const a=h.name.toLowerCase(),m=r.find(x=>x.name&&(x.name.toLowerCase().includes(a)||a.includes(x.name.toLowerCase())));
+   if(!m){$("#fdm").textContent="沒有找到同名住宿，請改點列表上的 Google Hotels 連結查看。";fd.disabled=false;return}
+   DATA[i]={...h,...m,localName:h.localName,distanceKm:h.distanceKm};detail(i);
+  }catch(e){$("#fdm").textContent="查詢失敗："+e.message;fd.disabled=false}};
+}
+document.querySelectorAll("#sortseg button").forEach(b=>b.onclick=()=>{sortMode=b.dataset.m;document.querySelectorAll("#sortseg button").forEach(x=>x.setAttribute("aria-pressed",x===b));if(DATA.length)render()});
+$("#wt").onchange=()=>DATA.length&&render();
+$("#rsrc").onchange=()=>DATA.length&&render();
 $("#go").onclick=search;$("#q").onkeydown=e=>e.key==="Enter"&&search();
-["ci","co","ppl","ns","fc","rsrc"].forEach(i=>$("#"+i).onchange=search);
-search();
 $("#q").focus();
 </script>
 </body>
