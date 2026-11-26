@@ -52,8 +52,7 @@ td.min{background:var(--bestbg);color:var(--best);font-weight:700}
 
 <div class="panel">
   <div class="row">
-    <label style="flex:1">地點／車站<input id="q" value="箱根湯本車站" placeholder="例如：箱根湯本車站" list="sug"></label>
-    <datalist id="sug"><option value="箱根湯本車站"></datalist>
+    <label style="flex:1">地點／車站<input id="q" placeholder="輸入地點或車站，例如：箱根湯本車站" autocomplete="off"></label>
     <label>入住<input type="date" id="ci"></label>
     <label>退房<input type="date" id="co"></label>
     <label>人數<select id="ppl"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></label>
@@ -134,6 +133,7 @@ function total(base,p,hi,ri){
 }
 function search(){
   const q=$("#q").value.trim();
+  if(!q){out.innerHTML='<p class="note">請在上方輸入地點或車站，再按「搜尋」。</p>';return}
   if(!/箱根|湯本|hakone|yumoto/i.test(q)){
     out.innerHTML='<p class="note">示範版目前只有「箱根湯本車站」的資料，請輸入箱根湯本車站。</p>';return}
   const ns=$("#ns").checked;
@@ -173,6 +173,7 @@ document.querySelectorAll("#sortseg button").forEach(b=>b.onclick=()=>{sortMode=
 $("#go").onclick=search;$("#q").onkeydown=e=>e.key==="Enter"&&search();
 ["ci","co","ppl","ns","fc","rsrc"].forEach(i=>$("#"+i).onchange=search);
 search();
+$("#q").focus();
 </script>
 </body>
 </html>
